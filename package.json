@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/sever.js",
+    "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -18,8 +18,10 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "colors": "^1.4.0",
+    "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "js": "^0.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.0"
   },
   "devDependencies": {
