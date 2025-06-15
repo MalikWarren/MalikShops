@@ -24,7 +24,7 @@ const UserEditScreen = () => {
     error,
   } = useGetUserDetailsQuery(userId);
 
-  const [updateUser, {isLoading: loadingUpdate}] = useUpdateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
 
   const navigate = useNavigate();
 
@@ -58,7 +58,6 @@ const UserEditScreen = () => {
       </Link>
       <FormContainer>
         <h1>Edit User</h1>
-        {loadingUpdate && <Loader />}
 
         {isLoading ? (
           <Loader />
