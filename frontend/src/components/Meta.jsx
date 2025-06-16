@@ -1,19 +1,19 @@
-import {Helmet} from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 
-const Meta = ({title, description, keywords}) => {
+const Meta = ({ title, description, keywords }) => {
   return (
     <Helmet>
       <title>{title}</title>
       <meta name='description' content={description} />
-      <meta name='keywords' content={keywords} />
+      <meta name='keyword' content={keywords} />
     </Helmet>
-  )
-}
+  );
+};
 
 Meta.defaultProps = {
-    title: 'Welcome to MalikShop',
-    description: "We sell the best products for cheap",
-    keywords: " electronics, buy electronics, cheap electronics, best electronics"
-}
+  title: 'Welcome To ProShop',
+  description: 'We sell the best products for cheap',
+  keywords: 'electronics, buy electronics, cheap electroincs',
+};
 
-export default Meta
+export default Meta;

@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
-
+import Meta from '../components/Meta';
 
 const HomeScreen = () => {
   const {pageNumber, keyword} = useParams();
@@ -22,7 +22,10 @@ const HomeScreen = () => {
       {!keyword ? (
         <ProductCarousel />
       ) : (
-        <Link to='/' className='btn btn-light mb-4'>
+        <Link
+          to='/'
+          className='btn btn-light mb-4'
+        >
           Go Back
         </Link>
       )}
@@ -34,14 +37,28 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <>
-
+          <Meta />
           <h1>Latest Products</h1>
           <Row>
-            {data.products.map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                <Product product={product} />
+            {data &&
+            Array.isArray(data.products) &&
+            data.products.length > 0 ? (
+              data.products.map((product) => (
+                <Col
+                  key={product._id}
+                  sm={12}
+                  md={6}
+                  lg={4}
+                  xl={3}
+                >
+                  <Product product={product} />
+                </Col>
+              ))
+            ) : (
+              <Col>
+                <Message variant='info'>No products found.</Message>
               </Col>
-            ))}
+            )}
           </Row>
           <Paginate
             pages={data.pages}

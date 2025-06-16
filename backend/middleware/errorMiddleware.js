@@ -8,15 +8,13 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
 
-  if (err.name === 'CastError' && err.kind === 'ObjectId') {
-    message = 'Resource not found';
-    statusCode = 404;
-  }
+  // NOTE: checking for invalid ObjectId moved to it's own middleware
+  // See README for further info.
 
   res.status(statusCode).json({
     message: message,
-    stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
 };
 
-export {notFound, errorHandler};
+export { notFound, errorHandler };
