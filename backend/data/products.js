@@ -8,8 +8,8 @@ const products = [
     category: 'Electronics',
     price: 89.99,
     countInStock: 10,
-    rating: 4.5,
-    numReviews: 12,
+    rating: 4.0,
+    numReviews: 45,
   },
   {
     name: 'iPhone 13 Pro 256GB Memory',
