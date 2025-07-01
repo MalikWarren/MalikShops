@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
+import {apiSlice} from './apiSlice';
 
 const initialState = {
   userInfo: localStorage.getItem('userInfo')
@@ -16,13 +17,20 @@ const authSlice = createSlice({
     },
     logout: (state, action) => {
       state.userInfo = null;
-      // NOTE: here we need to also remove the cart from storage so the next
-      // logged in user doesn't inherit the previous users cart and shipping
-      localStorage.clear();
+      localStorage.removeItem('userInfo');
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      apiSlice.endpoints.login.matchFulfilled,
+      (state, action) => {
+        state.userInfo = action.payload;
+        localStorage.setItem('userInfo', JSON.stringify(action.payload));
+      }
+    );
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const {setCredentials, logout} = authSlice.actions;
 
 export default authSlice.reducer;

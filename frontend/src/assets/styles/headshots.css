@@ -1,0 +1,216 @@
+/* Headshots Styles */
+.player-headshot {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  background: var(--gray-100);
+}
+
+.player-headshot:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.headshot-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: var(--gray-100);
+}
+
+.headshot-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.headshot-container:hover .headshot-overlay {
+  opacity: 1;
+}
+
+.headshot-placeholder {
+  width: 100%;
+  height: 200px;
+  background: var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-500);
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+}
+
+.headshot-loading {
+  width: 100%;
+  height: 200px;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+
+.headshot-error {
+  width: 100%;
+  height: 200px;
+  background: var(--red-600);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+}
+
+/* Team-specific headshot styles */
+.headshot-atlanta-dream {
+  border: 2px solid #e53e3e;
+}
+
+.headshot-chicago-sky {
+  border: 2px solid #3182ce;
+}
+
+.headshot-connecticut-sun {
+  border: 2px solid #f6ad55;
+}
+
+.headshot-dallas-wings {
+  border: 2px solid #9f7aea;
+}
+
+.headshot-golden-state-valkyries {
+  border: 2px solid #f56565;
+}
+
+.headshot-indiana-fever {
+  border: 2px solid #ed8936;
+}
+
+.headshot-las-vegas-aces {
+  border: 2px solid #38b2ac;
+}
+
+.headshot-los-angeles-sparks {
+  border: 2px solid #ed64a6;
+}
+
+.headshot-minnesota-lynx {
+  border: 2px solid #4299e1;
+}
+
+.headshot-new-york-liberty {
+  border: 2px solid #48bb78;
+}
+
+.headshot-phoenix-mercury {
+  border: 2px solid #ed8936;
+}
+
+.headshot-seattle-storm {
+  border: 2px solid #805ad5;
+}
+
+.headshot-washington-mystics {
+  border: 2px solid #e53e3e;
+}
+
+/* Responsive headshot sizes */
+@media (max-width: 768px) {
+  .player-headshot,
+  .headshot-placeholder,
+  .headshot-loading,
+  .headshot-error {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .player-headshot,
+  .headshot-placeholder,
+  .headshot-loading,
+  .headshot-error {
+    height: 120px;
+  }
+}
+
+/* Headshot grid layouts */
+.headshots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.headshots-grid-small {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.headshots-grid-large {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+/* Headshot animations */
+@keyframes headshotFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.headshot-fade-in {
+  animation: headshotFadeIn 0.3s ease-out;
+}
+
+/* Headshot hover effects */
+.headshot-hover-effect {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.headshot-hover-effect:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Headshot loading skeleton */
+.headshot-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--gray-200) 25%,
+    var(--gray-100) 50%,
+    var(--gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

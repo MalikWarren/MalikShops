@@ -1,0 +1,180 @@
+{
+  "calls": [
+    {
+      "endpoint": "/wnbateamlist",
+      "timestamp": "2025-06-19T23:10:30.122Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamlist",
+      "timestamp": "2025-06-19T23:10:30.481Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamlist",
+      "timestamp": "2025-06-19T23:10:30.522Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamplayers",
+      "timestamp": "2025-06-19T23:10:30.615Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamplayers",
+      "timestamp": "2025-06-19T23:10:30.655Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamplayers",
+      "timestamp": "2025-06-19T23:10:30.702Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamlist",
+      "timestamp": "2025-06-19T23:19:58.547Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamlist",
+      "timestamp": "2025-06-19T23:19:58.889Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamlist",
+      "timestamp": "2025-06-19T23:20:22.893Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/wnbateamlist",
+      "timestamp": "2025-06-19T23:20:23.157Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/player-statistic",
+      "timestamp": "2025-06-19T23:20:23.208Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/6854851169c828262e9b992e",
+      "timestamp": "2025-06-19T23:44:42.846Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/6854851169c828262e9b992e",
+      "timestamp": "2025-06-19T23:44:43.272Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/6854851169c828262e9b992e",
+      "timestamp": "2025-06-19T23:48:07.350Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/6854851169c828262e9b992e",
+      "timestamp": "2025-06-19T23:48:07.887Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/search/players",
+      "timestamp": "2025-06-19T23:50:18.567Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/search/players",
+      "timestamp": "2025-06-19T23:50:19.085Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/search/players",
+      "timestamp": "2025-06-19T23:55:15.731Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/search/players",
+      "timestamp": "2025-06-19T23:55:16.357Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-19T23:59:02.601Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-19T23:59:03.306Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:01:10.891Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:01:11.665Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:02:13.772Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:02:14.654Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:09:49.426Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:09:49.970Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:11:27.732Z",
+      "month": 5,
+      "year": 2025
+    },
+    {
+      "endpoint": "/players/id",
+      "timestamp": "2025-06-20T00:11:28.528Z",
+      "month": 5,
+      "year": 2025
+    }
+  ],
+  "total": 29,
+  "lastReset": "2025-06-19T23:10:30.118Z"
+}

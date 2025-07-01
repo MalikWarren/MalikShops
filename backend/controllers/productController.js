@@ -2,6 +2,7 @@ import asyncHandler from '../middleware/asyncHandler.js';
 import generateToken from '../utils/generateToken.js';
 import User from '../models/userModel.js';
 import Product from '../models/productModel.js';
+import Order from '../models/orderModel.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -184,14 +185,30 @@ const updateUser = asyncHandler(async (req, res) => {
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize =8;
+  const pageSize = Number(req.query.pageSize) || 12;
   const page = Number(req.query.pageNumber) || 1;
   const keyword = req.query.keyword
     ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: 'i',
-        },
+        $or: [
+          {
+            name: {
+              $regex: req.query.keyword,
+              $options: 'i',
+            },
+          },
+          {
+            team: {
+              $regex: req.query.keyword,
+              $options: 'i',
+            },
+          },
+          {
+            player: {
+              $regex: req.query.keyword,
+              $options: 'i',
+            },
+          },
+        ],
       }
     : {};
 
@@ -199,6 +216,12 @@ const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({...keyword})
     .limit(pageSize)
     .skip(pageSize * (page - 1));
+
+  console.log(
+    `Products API - Page: ${page}, PageSize: ${pageSize}, Total: ${count}, Pages: ${Math.ceil(
+      count / pageSize
+    )}, Products returned: ${products.length}`
+  );
 
   res.json({
     products,
@@ -244,17 +267,47 @@ const deleteProduct = asyncHandler(async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
+  const {
+    name,
+    price,
+    description,
+    image,
+    brand,
+    category,
+    countInStock,
+    team,
+    player,
+    isFeatured,
+  } = req.body;
+
+  // Validate required fields - check for empty strings too
+  if (
+    !name ||
+    !name.trim() ||
+    !team ||
+    !team.trim() ||
+    !player ||
+    !player.trim()
+  ) {
+    res.status(400);
+    throw new Error('Name, team, and player are required fields');
+  }
+
   const product = new Product({
-    name: 'Sample name',
-    price: 0,
+    name: name.trim(),
+    price: price || 0,
     user: req.user._id,
-    image: '/images/sample.jpg',
-    brand: 'Sample brand',
-    category: 'Sample category',
-    countInStock: 0,
+    image: image || '/images/sample.jpg',
+    brand: brand || 'Sample brand',
+    category: category || 'Sample category',
+    countInStock: countInStock || 0,
     numReviews: 0,
-    description: 'Sample description',
+    description: description || 'Sample description',
+    team: team.trim(),
+    player: player.trim(),
+    isFeatured: isFeatured || false,
   });
+
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
 });
@@ -263,17 +316,34 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const {name, price, description, image, brand, category, countInStock} =
-    req.body;
+  const {
+    name,
+    price,
+    description,
+    image,
+    brand,
+    category,
+    countInStock,
+    team,
+    player,
+    isFeatured,
+  } = req.body;
+
   const product = await Product.findById(req.params.id);
   if (product) {
-    product.name = name;
-    product.price = price;
-    product.description = description;
-    product.image = image;
-    product.brand = brand;
-    product.category = category;
-    product.countInStock = countInStock;
+    product.name = name || product.name;
+    product.price = price !== undefined ? price : product.price;
+    product.description = description || product.description;
+    product.image = image || product.image;
+    product.brand = brand || product.brand;
+    product.category = category || product.category;
+    product.countInStock =
+      countInStock !== undefined ? countInStock : product.countInStock;
+    product.team = team || product.team;
+    product.player = player || product.player;
+    product.isFeatured =
+      isFeatured !== undefined ? isFeatured : product.isFeatured;
+
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } else {
@@ -328,6 +398,146 @@ const getTopProducts = asyncHandler(async (req, res) => {
   res.json(products);
 });
 
+// @desc    Get top selling jerseys based on actual sales data
+// @route   GET /api/products/top-selling
+// @access  Public
+const getTopSellingJerseys = asyncHandler(async (req, res) => {
+  // Aggregate sales data from orders
+  const topSelling = await Order.aggregate([
+    // Unwind orderItems to get individual items
+    {$unwind: '$orderItems'},
+
+    // Only include paid orders
+    {$match: {isPaid: true}},
+
+    // Group by product and sum quantities sold
+    {
+      $group: {
+        _id: '$orderItems.product',
+        totalSold: {$sum: '$orderItems.qty'},
+        totalRevenue: {
+          $sum: {$multiply: ['$orderItems.price', '$orderItems.qty']},
+        },
+        orderCount: {$sum: 1},
+      },
+    },
+
+    // Sort by total sold (descending)
+    {$sort: {totalSold: -1}},
+
+    // Limit to top 10
+    {$limit: 10},
+  ]);
+
+  // If no sales data exists, fall back to featured jerseys
+  if (topSelling.length === 0) {
+    const featuredJerseys = await Product.find({isFeatured: true})
+      .sort({rating: -1, numReviews: -1})
+      .limit(10);
+    return res.json(featuredJerseys);
+  }
+
+  // Get the actual product details for the top-selling products
+  const productIds = topSelling.map((item) => item._id);
+  const products = await Product.find({_id: {$in: productIds}});
+
+  // Add sales data to products and sort by sales
+  const productsWithSales = products.map((product) => {
+    const salesData = topSelling.find(
+      (sale) => sale._id.toString() === product._id.toString()
+    );
+    return {
+      ...product.toObject(),
+      totalSold: salesData ? salesData.totalSold : 0,
+      totalRevenue: salesData ? salesData.totalRevenue : 0,
+      orderCount: salesData ? salesData.orderCount : 0,
+    };
+  });
+
+  // Sort by total sold (descending)
+  productsWithSales.sort((a, b) => b.totalSold - a.totalSold);
+
+  res.json(productsWithSales);
+});
+
+// @desc    Get jerseys by team
+// @route   GET /api/products/team/:teamName
+// @access  Public
+const getJerseysByTeam = asyncHandler(async (req, res) => {
+  const teamName = req.params.teamName.replace(/-/g, ' ');
+  const jerseys = await Product.find({
+    team: {$regex: new RegExp(`^${teamName}$`, 'i')},
+  });
+
+  if (jerseys.length === 0) {
+    res.status(404);
+    throw new Error('No jerseys found for this team');
+  }
+
+  res.json(jerseys);
+});
+
+// @desc    Get all teams
+// @route   GET /api/products/teams
+// @access  Public
+const getAllTeams = asyncHandler(async (req, res) => {
+  const teams = await Product.distinct('team');
+  res.json(teams);
+});
+
+// @desc    Get featured jerseys based on sales data and popularity
+// @route   GET /api/products/featured
+// @access  Public
+const getFeaturedJerseys = asyncHandler(async (req, res) => {
+  const limit = parseInt(req.query.limit) || 5;
+
+  // Try to get jerseys with actual sales data first
+  const topSelling = await Order.aggregate([
+    {$unwind: '$orderItems'},
+    {$match: {isPaid: true}},
+    {
+      $group: {
+        _id: '$orderItems.product',
+        totalSold: {$sum: '$orderItems.qty'},
+        totalRevenue: {
+          $sum: {$multiply: ['$orderItems.price', '$orderItems.qty']},
+        },
+      },
+    },
+    {$sort: {totalSold: -1}},
+    {$limit: limit},
+  ]);
+
+  let featuredJerseys;
+
+  if (topSelling.length > 0) {
+    // Get products with sales data
+    const productIds = topSelling.map((item) => item._id);
+    const products = await Product.find({_id: {$in: productIds}});
+
+    // Add sales data and sort
+    featuredJerseys = products.map((product) => {
+      const salesData = topSelling.find(
+        (sale) => sale._id.toString() === product._id.toString()
+      );
+      return {
+        ...product.toObject(),
+        totalSold: salesData ? salesData.totalSold : 0,
+        totalRevenue: salesData ? salesData.totalRevenue : 0,
+      };
+    });
+
+    featuredJerseys.sort((a, b) => b.totalSold - a.totalSold);
+  } else {
+    // Fallback to high-rated jerseys with good reviews
+    featuredJerseys = await Product.find({})
+      .sort({rating: -1, numReviews: -1})
+      .limit(limit);
+  }
+
+  res.json(featuredJerseys);
+});
+
 export {
   authUser,
   registerUser,
@@ -345,4 +555,8 @@ export {
   updateProduct,
   createProductReview,
   getTopProducts,
+  getTopSellingJerseys,
+  getJerseysByTeam,
+  getAllTeams,
+  getFeaturedJerseys,
 };

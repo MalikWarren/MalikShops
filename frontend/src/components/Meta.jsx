@@ -1,3 +1,4 @@
+import React from 'react';
 import {Helmet} from 'react-helmet-async';
 
 const Meta = ({title, description, keywords}) => {
@@ -9,7 +10,7 @@ const Meta = ({title, description, keywords}) => {
         content={description}
       />
       <meta
-        name='keyword'
+        name='keywords'
         content={keywords}
       />
     </Helmet>

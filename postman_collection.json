@@ -1,0 +1,588 @@
+{
+  "info": {
+    "name": "WNBA API - MalikShop Backend",
+    "description": "Collection for testing WNBA API endpoints with caching system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Games & Schedule",
+      "item": [
+        {
+          "name": "List All WNBA Games ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/games_id?game_date=2024-07-11&team_name=Sky",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "games_id"],
+              "query": [
+                {
+                  "key": "game_date",
+                  "value": "2024-07-11",
+                  "description": "The date of the game in YYYY-MM-DD format (optional)"
+                },
+                {
+                  "key": "team_name",
+                  "value": "Sky",
+                  "description": "A substring to filter by team name (optional)"
+                }
+              ]
+            },
+            "description": "Fetches WNBA games ID's based on the provided game date and/or team name."
+          }
+        },
+        {
+          "name": "Get Game by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/games/401620350",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "games", "401620350"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "401620350",
+                  "description": "The ID of the game"
+                }
+              ]
+            },
+            "description": "Retrieve details of a specific game by its ID."
+          }
+        },
+        {
+          "name": "Get Games by Home Team",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/games/home/Sky",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "games", "home", "Sky"],
+              "variable": [
+                {
+                  "key": "name",
+                  "value": "Sky",
+                  "description": "The team name of the home team"
+                }
+              ]
+            },
+            "description": "Retrieve games based on the home team's name."
+          }
+        },
+        {
+          "name": "Get Games by Away Team",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/games/away/Liberty",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "games", "away", "Liberty"],
+              "variable": [
+                {
+                  "key": "name",
+                  "value": "Liberty",
+                  "description": "The team name of the away team"
+                }
+              ]
+            },
+            "description": "Retrieve games based on the away team's name."
+          }
+        },
+        {
+          "name": "Get Games by Status (Detailed)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/games/status/all/final",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "games", "status", "all", "final"],
+              "variable": [
+                {
+                  "key": "status",
+                  "value": "final",
+                  "description": "The status of the game (final, upcoming)"
+                }
+              ]
+            },
+            "description": "Retrieve games based on their status (detailed)."
+          }
+        },
+        {
+          "name": "Get Games by Status (Simple)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/games/status/simple/upcoming",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "games", "status", "simple", "upcoming"],
+              "variable": [
+                {
+                  "key": "status",
+                  "value": "upcoming",
+                  "description": "The status of the game (final, upcoming)"
+                }
+              ]
+            },
+            "description": "Retrieve simplified game details based on their status."
+          }
+        },
+        {
+          "name": "Get Games by Date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/games/date/2024-07-11",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "games", "date", "2024-07-11"],
+              "variable": [
+                {
+                  "key": "date",
+                  "value": "2024-07-11",
+                  "description": "The date in YYYY-MM-DD format"
+                }
+              ]
+            },
+            "description": "Retrieve games based on the date."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "List All Teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/teams",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "teams"]
+            },
+            "description": "Retrieve a list of all WNBA teams."
+          }
+        },
+        {
+          "name": "Get Team Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/team_data?team_name=Liberty&season=2024",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "team_data"],
+              "query": [
+                {
+                  "key": "game_id",
+                  "value": "",
+                  "description": "Filter by game ID (optional)"
+                },
+                {
+                  "key": "season",
+                  "value": "2024",
+                  "description": "Filter by season (optional)"
+                },
+                {
+                  "key": "game_date",
+                  "value": "",
+                  "description": "Filter by game date (optional)"
+                },
+                {
+                  "key": "team_name",
+                  "value": "Liberty",
+                  "description": "Filter by team name (optional)"
+                }
+              ]
+            },
+            "description": "Retrieve team box score data based on query parameters."
+          }
+        },
+        {
+          "name": "Get Team Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/team_stats?team_name=Liberty",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "team_stats"],
+              "query": [
+                {
+                  "key": "team_name",
+                  "value": "Liberty",
+                  "description": "Filter by team name (required)"
+                }
+              ]
+            },
+            "description": "Retrieve team stats based on team name matching."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Players",
+      "item": [
+        {
+          "name": "Get Players by Team",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/players_by_team?team_name=Liberty",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "players_by_team"],
+              "query": [
+                {
+                  "key": "team_name",
+                  "value": "Liberty",
+                  "description": "Filter by team name (required)"
+                }
+              ]
+            },
+            "description": "Retrieve players based on the team's name."
+          }
+        },
+        {
+          "name": "Get Player Box Score Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/player_data?player_name=Sabrina Ionescu&game_id=401620350",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "player_data"],
+              "query": [
+                {
+                  "key": "player_name",
+                  "value": "Sabrina Ionescu",
+                  "description": "Filter by player name (required)"
+                },
+                {
+                  "key": "game_id",
+                  "value": "401620350",
+                  "description": "Filter by game ID (optional)"
+                },
+                {
+                  "key": "season",
+                  "value": "",
+                  "description": "Filter by season (optional)"
+                },
+                {
+                  "key": "game_date",
+                  "value": "",
+                  "description": "Filter by game date (optional)"
+                }
+              ]
+            },
+            "description": "Retrieve player box score data based on query parameters."
+          }
+        },
+        {
+          "name": "Get Player Avg Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/player_avg_stats?player_name=Sabrina Ionescu&season=2024",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "player_avg_stats"],
+              "query": [
+                {
+                  "key": "player_name",
+                  "value": "Sabrina Ionescu",
+                  "description": "Filter by player name (required)"
+                },
+                {
+                  "key": "game_id",
+                  "value": "",
+                  "description": "Filter by game ID (optional)"
+                },
+                {
+                  "key": "season",
+                  "value": "2024",
+                  "description": "Filter by season (optional)"
+                },
+                {
+                  "key": "game_date",
+                  "value": "",
+                  "description": "Filter by game date (optional)"
+                }
+              ]
+            },
+            "description": "Retrieve average player stats based on player name matching."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Play-by-Play",
+      "item": [
+        {
+          "name": "Get Plays by Game ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/plays/401620350",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "plays", "401620350"],
+              "variable": [
+                {
+                  "key": "game_id",
+                  "value": "401620350",
+                  "description": "The ID of the game"
+                }
+              ]
+            },
+            "description": "Retrieve play-by-play records for a specific game."
+          }
+        },
+        {
+          "name": "Get Plays by Game Date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/plays/date/2024-07-11",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "plays", "date", "2024-07-11"],
+              "variable": [
+                {
+                  "key": "game_date",
+                  "value": "2024-07-11",
+                  "description": "The date of the game in YYYY-MM-DD format"
+                }
+              ]
+            },
+            "description": "Retrieve play-by-play records for a specific game date."
+          }
+        },
+        {
+          "name": "Get Plays by Date and Game ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/plays/date/2024-07-11/game/401620350",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": [
+                "api",
+                "wnba",
+                "plays",
+                "date",
+                "2024-07-11",
+                "game",
+                "401620350"
+              ],
+              "variable": [
+                {
+                  "key": "game_date",
+                  "value": "2024-07-11",
+                  "description": "The date of the game in YYYY-MM-DD format"
+                },
+                {
+                  "key": "game_id",
+                  "value": "401620350",
+                  "description": "The ID of the game"
+                }
+              ]
+            },
+            "description": "Retrieve play-by-play records for a specific game date and game ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Management",
+      "item": [
+        {
+          "name": "Get API Usage Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/usage",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "usage"]
+            },
+            "description": "Get current API usage statistics and remaining calls."
+          }
+        },
+        {
+          "name": "Clear Cache",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/clear-cache",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "clear-cache"]
+            },
+            "description": "Clear all cached data (for testing/development)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Players (Cached)",
+      "item": [
+        {
+          "name": "Get All Players",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/players",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "players"]
+            },
+            "description": "Get all WNBA players (uses cache when available)."
+          }
+        },
+        {
+          "name": "Get Player by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/players/123?teamId=456",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "players", "123"],
+              "query": [
+                {
+                  "key": "teamId",
+                  "value": "456",
+                  "description": "Team ID (required for this endpoint)"
+                }
+              ]
+            },
+            "description": "Get player by ID (requires teamId parameter)."
+          }
+        },
+        {
+          "name": "Get Player by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/players/name/Breanna Stewart",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "players", "name", "Breanna Stewart"]
+            },
+            "description": "Get player by exact name match."
+          }
+        },
+        {
+          "name": "Search Players",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/players/search/breanna",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "players", "search", "breanna"]
+            },
+            "description": "Search players by name (partial match)."
+          }
+        },
+        {
+          "name": "Get Player Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/players/123/stats?teamId=456",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "players", "123", "stats"],
+              "query": [
+                {
+                  "key": "teamId",
+                  "value": "456",
+                  "description": "Team ID (required for this endpoint)"
+                }
+              ]
+            },
+            "description": "Get player statistics (requires teamId parameter)."
+          }
+        },
+        {
+          "name": "Get Team Roster",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/wnba/teams/456/roster",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "wnba", "teams", "456", "roster"]
+            },
+            "description": "Get all players for a specific team."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    }
+  ]
+}

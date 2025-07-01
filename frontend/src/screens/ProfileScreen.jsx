@@ -1,15 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Form, Button, Row, Col } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { FaTimes } from 'react-icons/fa';
+import React, {useEffect, useState} from 'react';
+import {
+  Table,
+  Form,
+  Button,
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+} from 'react-bootstrap';
+import {useDispatch, useSelector} from 'react-redux';
+import {FaTimes} from 'react-icons/fa';
+import {LinkContainer} from 'react-router-bootstrap';
 
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { useProfileMutation } from '../slices/usersApiSlice';
-import { useGetMyOrdersQuery } from '../slices/ordersApiSlice';
-import { setCredentials } from '../slices/authSlice';
-import { Link } from 'react-router-dom';
+import {useProfileMutation} from '../slices/usersApiSlice';
+import {useGetMyOrdersQuery} from '../slices/ordersApiSlice';
+import {setCredentials} from '../slices/authSlice';
+import {Link} from 'react-router-dom';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -17,11 +27,11 @@ const ProfileScreen = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const { userInfo } = useSelector((state) => state.auth);
+  const {userInfo} = useSelector((state) => state.auth);
 
-  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+  const {data: orders, isLoading, error} = useGetMyOrdersQuery();
 
-  const [updateProfile, { isLoading: loadingUpdateProfile }] =
+  const [updateProfile, {isLoading: loadingUpdateProfile}] =
     useProfileMutation();
 
   useEffect(() => {
@@ -44,7 +54,7 @@ const ProfileScreen = () => {
           email,
           password,
         }).unwrap();
-        dispatch(setCredentials({ ...res }));
+        dispatch(setCredentials({...res}));
         toast.success('Profile updated successfully');
       } catch (err) {
         toast.error(err?.data?.message || err.error);
@@ -58,7 +68,10 @@ const ProfileScreen = () => {
         <h2>User Profile</h2>
 
         <Form onSubmit={submitHandler}>
-          <Form.Group className='my-2' controlId='name'>
+          <Form.Group
+            className='my-2'
+            controlId='name'
+          >
             <Form.Label>Name</Form.Label>
             <Form.Control
               type='text'
@@ -68,7 +81,10 @@ const ProfileScreen = () => {
             ></Form.Control>
           </Form.Group>
 
-          <Form.Group className='my-2' controlId='email'>
+          <Form.Group
+            className='my-2'
+            controlId='email'
+          >
             <Form.Label>Email Address</Form.Label>
             <Form.Control
               type='email'
@@ -78,7 +94,10 @@ const ProfileScreen = () => {
             ></Form.Control>
           </Form.Group>
 
-          <Form.Group className='my-2' controlId='password'>
+          <Form.Group
+            className='my-2'
+            controlId='password'
+          >
             <Form.Label>Password</Form.Label>
             <Form.Control
               type='password'
@@ -88,7 +107,10 @@ const ProfileScreen = () => {
             ></Form.Control>
           </Form.Group>
 
-          <Form.Group className='my-2' controlId='confirmPassword'>
+          <Form.Group
+            className='my-2'
+            controlId='confirmPassword'
+          >
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control
               type='password'
@@ -98,7 +120,10 @@ const ProfileScreen = () => {
             ></Form.Control>
           </Form.Group>
 
-          <Button type='submit' variant='primary'>
+          <Button
+            type='submit'
+            variant='primary'
+          >
             Update
           </Button>
           {loadingUpdateProfile && <Loader />}
@@ -108,12 +133,14 @@ const ProfileScreen = () => {
         <h2>My Orders</h2>
         {isLoading ? (
           <Loader />
-        ) : error ? (
-          <Message variant='danger'>
-            {error?.data?.message || error.error}
-          </Message>
-        ) : (
-          <Table striped hover responsive className='table-sm'>
+        ) : orders && orders.length > 0 ? (
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            className='table-sm'
+          >
             <thead>
               <tr>
                 <th>ID</th>
@@ -125,39 +152,72 @@ const ProfileScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>{order.totalPrice}</td>
-                  <td>
-                    {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: 'red' }} />
-                    )}
-                  </td>
-                  <td>
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: 'red' }} />
-                    )}
-                  </td>
-                  <td>
-                    <Button
-                      as={Link}
-                      to={`/order/${order._id}`}
-                      className='btn-sm'
-                      variant='light'
-                    >
-                      Details
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {orders.map((order) =>
+                order && order._id ? (
+                  <tr key={order._id}>
+                    <td>{order._id}</td>
+                    <td>
+                      {order.createdAt
+                        ? order.createdAt.substring(0, 10)
+                        : 'N/A'}
+                    </td>
+                    <td>${order.totalPrice || 0}</td>
+                    <td>
+                      {order.isPaid ? (
+                        order.paidAt ? (
+                          order.paidAt.substring(0, 10)
+                        ) : (
+                          'Paid'
+                        )
+                      ) : (
+                        <i
+                          className='fas fa-times'
+                          style={{color: 'red'}}
+                        ></i>
+                      )}
+                    </td>
+                    <td>
+                      {order.isDelivered ? (
+                        order.deliveredAt ? (
+                          order.deliveredAt.substring(0, 10)
+                        ) : (
+                          'Delivered'
+                        )
+                      ) : (
+                        <i
+                          className='fas fa-times'
+                          style={{color: 'red'}}
+                        ></i>
+                      )}
+                    </td>
+                    <td>
+                      <LinkContainer to={`/order/${order._id}`}>
+                        <Button
+                          className='btn-sm'
+                          variant='light'
+                        >
+                          Details
+                        </Button>
+                      </LinkContainer>
+                    </td>
+                  </tr>
+                ) : null
+              )}
             </tbody>
           </Table>
+        ) : (
+          <div style={{textAlign: 'center', padding: '2rem'}}>
+            <p style={{color: 'var(--gray-600)', fontSize: '1.1rem'}}>
+              You haven't placed any orders yet.
+              <br />
+              <Link
+                to='/products'
+                style={{color: 'var(--wnba-orange)', textDecoration: 'none'}}
+              >
+                Start shopping for WNBA jerseys!
+              </Link>
+            </p>
+          </div>
         )}
       </Col>
     </Row>

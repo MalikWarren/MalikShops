@@ -6,9 +6,9 @@ import User from '../models/userModel.js';
 // @route   POST /api/users/auth
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const {email, password} = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({email});
 
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
@@ -29,9 +29,9 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const {name, email, password} = req.body;
 
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({email});
 
   if (userExists) {
     res.status(400);
@@ -64,7 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access  Public
 const logoutUser = (req, res) => {
   res.clearCookie('jwt');
-  res.status(200).json({ message: 'Logged out successfully' });
+  res.status(200).json({message: 'Logged out successfully'});
 };
 
 // @desc    Get user profile
@@ -126,18 +126,32 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
 const deleteUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  try {
+    const user = await User.findById(req.params.id);
 
-  if (user) {
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
     if (user.isAdmin) {
       res.status(400);
-      throw new Error('Can not delete admin user');
+      throw new Error('Cannot delete admin users');
     }
-    await User.deleteOne({ _id: user._id });
-    res.json({ message: 'User removed' });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
+
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+    if (!deletedUser) {
+      res.status(500);
+      throw new Error('Failed to delete user');
+    }
+
+    console.log(`User deleted: ${user.email} (ID: ${user._id})`);
+    res.json({message: 'User removed successfully'});
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500);
+    throw new Error(error.message || 'Server error during user deletion');
   }
 });
 

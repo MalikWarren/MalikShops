@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import {useState, useEffect} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Form, Button} from 'react-bootstrap';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import FormContainer from '../../components/FormContainer';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import {
   useGetProductDetailsQuery,
   useUpdateProductMutation,
@@ -12,7 +12,7 @@ import {
 } from '../../slices/productsApiSlice';
 
 const ProductEditScreen = () => {
-  const { id: productId } = useParams();
+  const {id: productId} = useParams();
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
@@ -21,6 +21,9 @@ const ProductEditScreen = () => {
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState('');
+  const [team, setTeam] = useState('');
+  const [player, setPlayer] = useState('');
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const {
     data: product,
@@ -29,10 +32,10 @@ const ProductEditScreen = () => {
     error,
   } = useGetProductDetailsQuery(productId);
 
-  const [updateProduct, { isLoading: loadingUpdate }] =
+  const [updateProduct, {isLoading: loadingUpdate}] =
     useUpdateProductMutation();
 
-  const [uploadProductImage, { isLoading: loadingUpload }] =
+  const [uploadProductImage, {isLoading: loadingUpload}] =
     useUploadProductImageMutation();
 
   const navigate = useNavigate();
@@ -49,7 +52,10 @@ const ProductEditScreen = () => {
         category,
         description,
         countInStock,
-      }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
+        team,
+        player,
+        isFeatured,
+      }).unwrap();
       toast.success('Product updated');
       refetch();
       navigate('/admin/productlist');
@@ -67,6 +73,9 @@ const ProductEditScreen = () => {
       setCategory(product.category);
       setCountInStock(product.countInStock);
       setDescription(product.description);
+      setTeam(product.team || '');
+      setPlayer(product.player || '');
+      setIsFeatured(product.isFeatured || false);
     }
   }, [product]);
 
@@ -84,7 +93,10 @@ const ProductEditScreen = () => {
 
   return (
     <>
-      <Link to='/admin/productlist' className='btn btn-light my-3'>
+      <Link
+        to='/admin/productlist'
+        className='btn btn-light my-3'
+      >
         Go Back
       </Link>
       <FormContainer>
@@ -99,10 +111,30 @@ const ProductEditScreen = () => {
             <Form.Group controlId='name'>
               <Form.Label>Name</Form.Label>
               <Form.Control
-                type='name'
+                type='text'
                 placeholder='Enter name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId='team'>
+              <Form.Label>Team</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter team name'
+                value={team}
+                onChange={(e) => setTeam(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId='player'>
+              <Form.Label>Player</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter player name'
+                value={player}
+                onChange={(e) => setPlayer(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
@@ -165,17 +197,27 @@ const ProductEditScreen = () => {
             <Form.Group controlId='description'>
               <Form.Label>Description</Form.Label>
               <Form.Control
-                type='text'
+                as='textarea'
+                rows={3}
                 placeholder='Enter description'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
+            <Form.Group controlId='isFeatured'>
+              <Form.Check
+                type='checkbox'
+                label='Featured Product'
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+              />
+            </Form.Group>
+
             <Button
               type='submit'
               variant='primary'
-              style={{ marginTop: '1rem' }}
+              style={{marginTop: '1rem'}}
             >
               Update
             </Button>

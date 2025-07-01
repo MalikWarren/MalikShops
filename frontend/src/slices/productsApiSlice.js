@@ -1,15 +1,22 @@
-import { PRODUCTS_URL } from '../constants';
-import { apiSlice } from './apiSlice';
+import {PRODUCTS_URL} from '../constants';
+import {apiSlice} from './apiSlice';
 
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: ({ keyword, pageNumber }) => ({
+      query: ({keyword, pageNumber}) => ({
         url: PRODUCTS_URL,
-        params: { keyword, pageNumber },
+        params: {keyword, pageNumber},
       }),
       keepUnusedDataFor: 5,
-      providesTags: ['Products'],
+      providesTags: (result, error, {pageNumber}) =>
+        result
+          ? [
+              ...result.products.map(({_id}) => ({type: 'Products', id: _id})),
+              {type: 'Products', id: 'LIST'},
+              {type: 'Products', id: `PAGE_${pageNumber}`},
+            ]
+          : [{type: 'Products', id: 'LIST'}],
     }),
     getProductDetails: builder.query({
       query: (productId) => ({
@@ -18,11 +25,12 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     createProduct: builder.mutation({
-      query: () => ({
+      query: (data) => ({
         url: `${PRODUCTS_URL}`,
         method: 'POST',
+        body: data,
       }),
-      invalidatesTags: ['Product'],
+      invalidatesTags: ['Products'],
     }),
     updateProduct: builder.mutation({
       query: (data) => ({

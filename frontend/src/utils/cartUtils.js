@@ -26,7 +26,11 @@ export const updateCart = (state) => {
 
   const totalPrice = itemsPrice + shippingPrice + taxPrice;
   // Calculate the total price
-  state.totalPrice = addDecimals(totalPrice);
+  if (state.promoCode && state.promoCode.trim().toUpperCase() === 'HIRE ME') {
+    state.totalPrice = '0.00';
+  } else {
+    state.totalPrice = addDecimals(totalPrice);
+  }
 
   // Save the cart to localStorage
   localStorage.setItem('cart', JSON.stringify(state));

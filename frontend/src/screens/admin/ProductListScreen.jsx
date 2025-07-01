@@ -1,24 +1,31 @@
-import { Table, Button, Row, Col } from 'react-bootstrap';
-import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
-import { Link, useParams } from 'react-router-dom';
+import {Table, Button, Row, Col, Form} from 'react-bootstrap';
+import {FaEdit, FaPlus, FaTrash, FaSearch} from 'react-icons/fa';
+import {Link, useSearchParams, useNavigate} from 'react-router-dom';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import Paginate from '../../components/Paginate';
 import {
   useGetProductsQuery,
   useDeleteProductMutation,
-  useCreateProductMutation,
 } from '../../slices/productsApiSlice';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
+import {useState, useEffect} from 'react';
 
 const ProductListScreen = () => {
-  const { pageNumber } = useParams();
+  const [searchParams] = useSearchParams();
+  const pageNumber = searchParams.get('page');
+  const keyword = searchParams.get('keyword') || '';
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState(keyword);
 
-  const { data, isLoading, error, refetch } = useGetProductsQuery({
-    pageNumber,
+  const page = pageNumber ? Number(pageNumber) : 1;
+
+  const {data, isLoading, error, refetch} = useGetProductsQuery({
+    pageNumber: page,
+    keyword: keyword,
   });
 
-  const [deleteProduct, { isLoading: loadingDelete }] =
+  const [deleteProduct, {isLoading: loadingDelete}] =
     useDeleteProductMutation();
 
   const deleteHandler = async (id) => {
@@ -32,34 +39,91 @@ const ProductListScreen = () => {
     }
   };
 
-  const [createProduct, { isLoading: loadingCreate }] =
-    useCreateProductMutation();
+  const createProductHandler = () => {
+    navigate('/admin/product/create');
+  };
 
-  const createProductHandler = async () => {
-    if (window.confirm('Are you sure you want to create a new product?')) {
-      try {
-        await createProduct();
-        refetch();
-      } catch (err) {
-        toast.error(err?.data?.message || err.error);
-      }
+  const submitSearchHandler = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/admin/productlist?keyword=${searchTerm.trim()}`);
+    } else {
+      navigate('/admin/productlist');
     }
+  };
+
+  const clearSearchHandler = () => {
+    setSearchTerm('');
+    navigate('/admin/productlist');
   };
 
   return (
     <>
-      <Row className='align-items-center'>
+      <Row
+        className='align-items-center'
+        style={{marginBottom: '2rem', marginTop: '1rem'}}
+      >
         <Col>
           <h1>Products</h1>
         </Col>
         <Col className='text-end'>
-          <Button className='my-3' onClick={createProductHandler}>
+          <Button
+            className='my-3'
+            onClick={createProductHandler}
+          >
             <FaPlus /> Create Product
           </Button>
         </Col>
       </Row>
 
-      {loadingCreate && <Loader />}
+      {/* Search Form */}
+      <Row className='mb-3'>
+        <Col md={6}>
+          <Form onSubmit={submitSearchHandler}>
+            <Row>
+              <Col md={8}>
+                <Form.Control
+                  type='text'
+                  placeholder='Search products by name, team, or player...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </Col>
+              <Col md={4}>
+                <div className='d-flex gap-2'>
+                  <Button
+                    type='submit'
+                    variant='primary'
+                    className='flex-fill'
+                  >
+                    <FaSearch /> Search
+                  </Button>
+                  {keyword && (
+                    <Button
+                      variant='outline-secondary'
+                      onClick={clearSearchHandler}
+                      title='Clear search'
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </Col>
+        {keyword && (
+          <Col
+            md={6}
+            className='d-flex align-items-center'
+          >
+            <span className='text-muted'>
+              Search results for: <strong>"{keyword}"</strong>
+            </span>
+          </Col>
+        )}
+      </Row>
+
       {loadingDelete && <Loader />}
       {isLoading ? (
         <Loader />
@@ -67,7 +131,13 @@ const ProductListScreen = () => {
         <Message variant='danger'>{error.data.message}</Message>
       ) : (
         <>
-          <Table striped bordered hover responsive className='table-sm'>
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            className='table-sm'
+          >
             <thead>
               <tr>
                 <th>ID</th>
@@ -100,14 +170,19 @@ const ProductListScreen = () => {
                       className='btn-sm'
                       onClick={() => deleteHandler(product._id)}
                     >
-                      <FaTrash style={{ color: 'white' }} />
+                      <FaTrash style={{color: 'white'}} />
                     </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
-          <Paginate pages={data.pages} page={data.page} isAdmin={true} />
+          <Paginate
+            pages={data.pages}
+            page={data.page}
+            isAdmin={true}
+            keyword={keyword}
+          />
         </>
       )}
     </>

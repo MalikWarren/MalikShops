@@ -1,9 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { updateCart } from '../utils/cartUtils';
+import {createSlice} from '@reduxjs/toolkit';
+import {updateCart} from '../utils/cartUtils';
 
 const initialState = localStorage.getItem('cart')
   ? JSON.parse(localStorage.getItem('cart'))
-  : { cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
+  : {
+      cartItems: [],
+      shippingAddress: {},
+      paymentMethod: 'PayPal',
+      promoCode: '',
+    };
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -12,7 +17,7 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       // NOTE: we don't need user, rating, numReviews or reviews
       // in the cart
-      const { user, rating, numReviews, reviews, ...item } = action.payload;
+      const {user, rating, numReviews, reviews, ...item} = action.payload;
 
       const existItem = state.cartItems.find((x) => x._id === item._id);
 
@@ -45,6 +50,10 @@ const cartSlice = createSlice({
     // NOTE: here we need to reset state for when a user logs out so the next
     // user doesn't inherit the previous users cart and shipping
     resetCart: (state) => (state = initialState),
+    setPromoCode: (state, action) => {
+      state.promoCode = action.payload;
+      return updateCart(state);
+    },
   },
 });
 
@@ -55,6 +64,7 @@ export const {
   savePaymentMethod,
   clearCartItems,
   resetCart,
+  setPromoCode,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
