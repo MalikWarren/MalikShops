@@ -146,26 +146,254 @@
   }
 }
 
-/* Headshot grid layouts */
+/* Headshot grid layouts - Single horizontal row */
 .headshots-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1.5rem;
   margin: 1rem 0;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-300) transparent;
+}
+
+.headshots-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.headshots-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.headshots-grid::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 3px;
+}
+
+.headshots-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
 }
 
 .headshots-grid-small {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.75rem;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
   margin: 1rem 0;
+  overflow-x: auto;
+  padding: 0.5rem 0;
 }
 
 .headshots-grid-large {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2rem;
   margin: 1rem 0;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+/* Uniform card styling for horizontal row */
+.headshot-card {
+  flex: 0 0 280px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
+}
+
+.headshot-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.headshot-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: var(--gray-50);
+}
+
+.headshot-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.headshot-card:hover .headshot-image {
+  transform: scale(1.05);
+}
+
+.headshot-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background: var(--white);
+}
+
+.player-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  color: var(--gray-900);
+  line-height: 1.2;
+}
+
+.team-name {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.position-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  margin: 0 auto 0.5rem auto;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.position-guard {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.position-forward {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.position-center {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.headshot-rating-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.headshot-stars {
+  font-size: 0.875rem;
+}
+
+.headshot-rating-text {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.headshot-price-container {
+  margin-top: auto;
+  text-align: center;
+}
+
+.headshot-price {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--wnba-orange);
+}
+
+.headshot-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  justify-content: center;
+}
+
+.headshot-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.headshot-actions .btn-primary {
+  background: var(--wnba-orange);
+  color: white;
+}
+
+.headshot-actions .btn-outline {
+  background: transparent;
+  color: var(--wnba-orange);
+  border: 1px solid var(--wnba-orange);
+}
+
+.headshot-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments for horizontal row */
+@media (max-width: 1200px) {
+  .headshot-card {
+    flex: 0 0 260px;
+    min-height: 360px;
+  }
+
+  .headshots-grid {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .headshot-card {
+    flex: 0 0 240px;
+    min-height: 340px;
+  }
+
+  .headshots-grid {
+    gap: 1rem;
+  }
+
+  .headshot-image-container {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headshot-card {
+    flex: 0 0 200px;
+    min-height: 300px;
+  }
+
+  .headshots-grid {
+    gap: 0.75rem;
+  }
+
+  .headshot-image-container {
+    height: 160px;
+  }
+
+  .headshot-card-body {
+    padding: 0.75rem;
+  }
+
+  .player-name {
+    font-size: 0.875rem;
+  }
+
+  .team-name {
+    font-size: 0.75rem;
+  }
 }
 
 /* Headshot animations */

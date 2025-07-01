@@ -10,6 +10,14 @@ import styled from 'styled-components';
 import {TEAM_COLORS} from '../utils/teamLogoUrls';
 import ProductCard from '../components/ProductCard';
 import players from '../data/players';
+import {
+  FaBasketballBall,
+  FaTrophy,
+  FaUsers,
+  FaShoppingCart,
+  FaStar,
+  FaArrowLeft,
+} from 'react-icons/fa';
 
 function getContrastYIQ(hexcolor) {
   hexcolor = hexcolor.replace('#', '');
@@ -20,148 +28,272 @@ function getContrastYIQ(hexcolor) {
   return yiq > 180; // true = dark text, false = white text
 }
 
+const PageContainer = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+`;
+
 const TeamHeader = styled.div`
-  background: ${({$bgcolor}) => $bgcolor || '#222'};
-  padding: 2.5rem 0 2rem 0;
-  margin-bottom: 2.5rem;
+  background: ${({$bgcolor}) =>
+    `linear-gradient(135deg, ${$bgcolor} 0%, ${$bgcolor}dd 100%)`};
+  padding: 4rem 0 3rem 0;
+  margin-bottom: 0;
   text-align: center;
-  border-bottom: 4px solid #fff;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
   color: ${({$darktext}) => ($darktext ? 'var(--gray-900)' : 'white')};
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+`;
+
+const BackButton = styled(Link)`
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: inherit;
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: inherit;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const TeamLogo = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   object-fit: contain;
-  margin-bottom: 1rem;
-  background: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  padding: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 5;
 `;
 
 const TeamTitle = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-size: 3.5rem;
+  font-weight: 900;
   margin-bottom: 0.5rem;
   color: inherit;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 5;
 `;
 
 const TeamSubtitle = styled.p`
   color: ${({$darktext}) =>
-    $darktext ? 'var(--gray-200)' : 'rgba(255,255,255,0.85)'};
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+    $darktext ? 'var(--gray-700)' : 'rgba(255,255,255,0.9)'};
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  position: relative;
+  z-index: 5;
 `;
 
 const TeamStat = styled.div`
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
-  color: ${({$darktext}) => ($darktext ? 'var(--gray-700)' : 'white')};
+  color: ${({$darktext}) => ($darktext ? 'var(--gray-800)' : 'white')};
+  position: relative;
+  z-index: 5;
+`;
+
+const ContentSection = styled.div`
+  padding: 3rem 0;
+  background: white;
+`;
+
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 `;
 
 const StatsSection = styled.div`
-  background: ${({$bgcolor}) => $bgcolor || '#f8f9fa'};
-  border-radius: 1rem;
-  padding: 2rem;
-  margin-bottom: 2.5rem;
-  border: 3px solid #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  color: ${({$darktext}) => ($darktext ? 'var(--gray-900)' : 'white')};
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  margin: -2rem auto 3rem auto;
+  max-width: 1000px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 10;
 `;
 
 const StatsTitle = styled.h2`
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
   text-align: center;
-  color: inherit;
+  color: var(--gray-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 `;
 
 const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 1rem;
+  padding: 2rem 1.5rem;
   text-align: center;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  border: 2px solid #e2e8f0;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--wnba-orange), #f59e0b);
+  }
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    border-color: var(--wnba-orange);
   }
 `;
 
 const StatNumber = styled.div`
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 2.5rem;
+  font-weight: 900;
   margin-bottom: 0.5rem;
-  color: inherit;
+  color: var(--gray-900);
+  background: linear-gradient(135deg, var(--wnba-orange), #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 `;
 
 const StatLabel = styled.div`
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.8;
-  color: inherit;
+  letter-spacing: 1px;
+  color: var(--gray-600);
 `;
 
 const PositionBadge = styled(Badge)`
   font-size: 0.8rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.6rem 1rem;
   margin: 0.25rem;
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   background: ${({$bgcolor}) => $bgcolor || '#6c757d'} !important;
   color: white !important;
   border: none;
-`;
-
-const JerseyCard = styled(Card)`
-  height: 100%;
-  border-radius: 1rem;
-  border: 3px solid #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  background: ${({$bgcolor}) => $bgcolor || '#f4f4f4'};
-  color: ${({$darktext}) => ($darktext ? 'var(--gray-900)' : 'white')};
-  transition: all 0.3s cubic-bezier(0.4, 2, 0.3, 1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: hidden;
-
-  &:hover {
-    transform: scale(1.04) translateY(-4px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    z-index: 2;
-  }
-`;
-
-const JerseyImage = styled(Card.Img)`
-  height: 260px;
-  object-fit: contain;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 1rem;
-  margin-top: 1rem;
-`;
-
-const JerseyTitle = styled(Card.Title)`
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: inherit;
-`;
-
-const JerseyPrice = styled.div`
-  font-size: 1.25rem;
   font-weight: 600;
-  color: ${({$darktext}) => ($darktext ? '#0d6efd' : '#fff')};
-  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const PlayersSection = styled.div`
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+`;
+
+const SectionHeader = styled.div`
+  text-align: center;
+  margin-bottom: 2.5rem;
+`;
+
+const SectionTitle = styled.h3`
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+`;
+
+const SectionSubtitle = styled.p`
+  font-size: 1.1rem;
+  color: var(--gray-600);
+  margin-bottom: 0;
+  font-weight: 500;
+`;
+
+const HorizontalRow = styled.div`
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+
+  /* Force cards to be uniform size */
+  & > * {
+    min-height: 380px;
+  }
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1.25rem;
+    & > * {
+      min-height: 360px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem;
+    & > * {
+      min-height: 340px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+    & > * {
+      min-height: 320px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(1, 1fr) !important;
+    gap: 0.75rem;
+    & > * {
+      min-height: 300px;
+    }
+  }
 `;
 
 const TeamPage = () => {
@@ -295,11 +427,14 @@ const TeamPage = () => {
   };
 
   return (
-    <>
+    <PageContainer>
       <TeamHeader
         $bgcolor={colorObj.primary}
         $darktext={useDarkText}
       >
+        <BackButton to='/teams'>
+          <FaArrowLeft /> Back to Teams
+        </BackButton>
         <TeamLogo
           src={`/images/teams/${teamName}.png`}
           alt={`${displayTeamName} logo`}
@@ -309,86 +444,108 @@ const TeamPage = () => {
         />
         <TeamTitle>{displayTeamName}</TeamTitle>
         <TeamSubtitle $darktext={useDarkText}>
-          Official WNBA Jerseys
+          Official WNBA Jerseys Collection
         </TeamSubtitle>
         <TeamStat $darktext={useDarkText}>
-          {jerseys.length} Player{jerseys.length === 1 ? '' : 's'}
+          {jerseys.length} Player{jerseys.length === 1 ? '' : 's'} Available
         </TeamStat>
       </TeamHeader>
 
-      {/* Team Statistics Section */}
-      <StatsSection
-        $bgcolor={colorObj.primary}
-        $darktext={useDarkText}
-      >
-        <StatsTitle>Team Statistics</StatsTitle>
+      <ContentSection>
+        <Container>
+          {/* Team Statistics Section */}
+          <StatsSection>
+            <StatsTitle>
+              <FaTrophy /> Team Statistics
+            </StatsTitle>
 
-        <Row className='g-4 mb-4'>
-          <Col
-            xs={6}
-            md={3}
-          >
-            <StatCard>
-              <StatNumber>{totalPlayers}</StatNumber>
-              <StatLabel>Total Players</StatLabel>
-            </StatCard>
-          </Col>
-          <Col
-            xs={6}
-            md={3}
-          >
-            <StatCard>
-              <StatNumber>${averagePrice}</StatNumber>
-              <StatLabel>Average Price</StatLabel>
-            </StatCard>
-          </Col>
-          <Col
-            xs={6}
-            md={3}
-          >
-            <StatCard>
-              <StatNumber>{inStockCount}</StatNumber>
-              <StatLabel>In Stock</StatLabel>
-            </StatCard>
-          </Col>
-          <Col
-            xs={6}
-            md={3}
-          >
-            <StatCard>
-              <StatNumber>{outOfStockCount}</StatNumber>
-              <StatLabel>Out of Stock</StatLabel>
-            </StatCard>
-          </Col>
-        </Row>
-
-        {/* Position Breakdown */}
-        <div className='text-center'>
-          <h4 style={{marginBottom: '1rem', fontWeight: 600}}>
-            Position Breakdown
-          </h4>
-          <div>
-            {Object.entries(positions).map(([position, count]) => (
-              <PositionBadge
-                key={position}
-                $bgcolor={positionColors[position]}
+            <Row className='g-4 mb-4'>
+              <Col
+                xs={6}
+                md={3}
               >
-                {position}: {count}
-              </PositionBadge>
-            ))}
-          </div>
-        </div>
-      </StatsSection>
+                <StatCard>
+                  <StatNumber>{totalPlayers}</StatNumber>
+                  <StatLabel>Total Players</StatLabel>
+                </StatCard>
+              </Col>
+              <Col
+                xs={6}
+                md={3}
+              >
+                <StatCard>
+                  <StatNumber>${averagePrice}</StatNumber>
+                  <StatLabel>Average Price</StatLabel>
+                </StatCard>
+              </Col>
+              <Col
+                xs={6}
+                md={3}
+              >
+                <StatCard>
+                  <StatNumber>{inStockCount}</StatNumber>
+                  <StatLabel>In Stock</StatLabel>
+                </StatCard>
+              </Col>
+              <Col
+                xs={6}
+                md={3}
+              >
+                <StatCard>
+                  <StatNumber>{outOfStockCount}</StatNumber>
+                  <StatLabel>Out of Stock</StatLabel>
+                </StatCard>
+              </Col>
+            </Row>
 
-      <div className='headshot-grid'>
-        {jerseys.map((jersey) => (
-          <ProductCard
-            key={jersey._id}
-            product={jersey}
-          />
-        ))}
-      </div>
-    </>
+            {/* Position Breakdown */}
+            <div className='text-center'>
+              <h4
+                style={{
+                  marginBottom: '1.5rem',
+                  fontWeight: 700,
+                  color: 'var(--gray-800)',
+                }}
+              >
+                <FaUsers style={{marginRight: '0.5rem'}} />
+                Position Breakdown
+              </h4>
+              <div>
+                {Object.entries(positions).map(([position, count]) => (
+                  <PositionBadge
+                    key={position}
+                    $bgcolor={positionColors[position]}
+                  >
+                    {position}: {count}
+                  </PositionBadge>
+                ))}
+              </div>
+            </div>
+          </StatsSection>
+
+          {/* Players Section */}
+          <PlayersSection>
+            <SectionHeader>
+              <SectionTitle>
+                <FaBasketballBall /> Player Jerseys
+              </SectionTitle>
+              <SectionSubtitle>
+                Browse and shop official {displayTeamName} player jerseys
+              </SectionSubtitle>
+            </SectionHeader>
+
+            <HorizontalRow>
+              {jerseys.map((jersey) => (
+                <ProductCard
+                  key={jersey._id}
+                  product={jersey}
+                />
+              ))}
+            </HorizontalRow>
+          </PlayersSection>
+        </Container>
+      </ContentSection>
+    </PageContainer>
   );
 };
 
