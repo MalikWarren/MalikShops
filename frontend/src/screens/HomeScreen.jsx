@@ -215,6 +215,89 @@ const BackToHomeButton = styled(Link)`
   }
 `;
 
+const TopSellingSection = styled.section`
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  padding: 3rem 2rem;
+  margin: 3rem auto;
+  max-width: 1200px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+`;
+
+const TopSellingHeader = styled.div`
+  text-align: center;
+  margin-bottom: 2.5rem;
+`;
+
+const TopSellingTitle = styled.h2`
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--wnba-orange), #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+`;
+
+const TopSellingSubtitle = styled.p`
+  text-align: center;
+  color: var(--gray-600);
+  font-size: 1.2rem;
+  margin-bottom: 0;
+  font-weight: 500;
+`;
+
+const TopSellingGrid = styled.div`
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+
+  /* Force cards to be uniform size */
+  & > * {
+    min-height: 380px;
+  }
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1.25rem;
+    & > * {
+      min-height: 360px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem;
+    & > * {
+      min-height: 340px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+    & > * {
+      min-height: 320px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(1, 1fr) !important;
+    gap: 0.75rem;
+    & > * {
+      min-height: 300px;
+    }
+  }
+`;
+
+const TopSellingButtonContainer = styled.div`
+  text-align: center;
+  margin-top: 2rem;
+`;
+
 const HomeScreen = () => {
   const {keyword: encodedKeyword, pageNumber} = useParams();
   const keyword = encodedKeyword ? decodeURIComponent(encodedKeyword) : null;
@@ -418,41 +501,16 @@ const HomeScreen = () => {
       </StatsSection>
 
       {/* Top Selling Jerseys */}
-      <section
-        style={{
-          background: 'var(--gray-50)',
-          borderRadius: '1.5rem',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-          padding: '2rem 1rem',
-          margin: '2rem 0',
-          border: '1px solid var(--gray-200)',
-        }}
-      >
-        <h2
-          style={{
-            fontSize: '2rem',
-            fontWeight: 800,
-            marginBottom: '1rem',
-            textAlign: 'center',
-            letterSpacing: '0.5px',
-            color: 'var(--wnba-blue)',
-          }}
-        >
-          Top Selling Jerseys
-        </h2>
-        <p
-          style={{
-            textAlign: 'center',
-            color: 'var(--gray-600)',
-            fontSize: '1.1rem',
-            marginBottom: '2rem',
-          }}
-        >
-          The most popular jerseys that fans love to wear
-        </p>
-        <div className='headshots-grid'>
+      <TopSellingSection>
+        <TopSellingHeader>
+          <TopSellingTitle>Top Selling Jerseys</TopSellingTitle>
+          <TopSellingSubtitle>
+            The most popular jerseys that fans love to wear
+          </TopSellingSubtitle>
+        </TopSellingHeader>
+        <TopSellingGrid>
           {topSellingJerseys && topSellingJerseys.length > 0 ? (
-            topSellingJerseys.slice(0, 6).map((jersey) => (
+            topSellingJerseys.slice(0, 10).map((jersey) => (
               <ProductCard
                 key={jersey._id}
                 product={jersey}
@@ -460,19 +518,25 @@ const HomeScreen = () => {
               />
             ))
           ) : (
-            <div style={{textAlign: 'center', padding: '2rem'}}>
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '2rem',
+                gridColumn: '1 / -1',
+              }}
+            >
               <p style={{color: 'var(--gray-600)', fontSize: '1.1rem'}}>
                 Loading top selling jerseys...
               </p>
             </div>
           )}
-        </div>
-        <div style={{textAlign: 'center', marginTop: '1.5rem'}}>
+        </TopSellingGrid>
+        <TopSellingButtonContainer>
           <ViewAllButton to='/products'>
             View All Jerseys <FaArrowRight />
           </ViewAllButton>
-        </div>
-      </section>
+        </TopSellingButtonContainer>
+      </TopSellingSection>
 
       {/* Products Display */}
       {isLoading ? (
